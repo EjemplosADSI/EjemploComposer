@@ -1,17 +1,20 @@
 <?php
 
 namespace App\Models;
+use Carbon\Carbon;
+
 require_once ("BasicModel.php");
 
 class Carro extends BasicModel
 {
     //Propiedades
+    protected int $id;
     protected string $marca; //Visibilidad (public, protected, private)
     protected string $color; // Tipos (bool, int, float, null, array, object)
     protected int $anno;
     protected bool $cajaAutomatica; // LowerCamelCase
     protected float $cantidadGasolina;
-    protected string $estado; // Disponible, Vendido, Apartado, En Reparacion
+    protected string $estado; // Disponible, Vendido, Apartado, En Reparacion, Inactivo
 
     //Variable
     private array $marcasExcluidas = array('lexus', 'opel', 'porche');
@@ -36,6 +39,22 @@ class Carro extends BasicModel
     }
 
     /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
      * @return mixed|string
      */
     public function getMarca(): string
@@ -46,12 +65,13 @@ class Carro extends BasicModel
     /**
      * @param string $marca
      */
-    public function setMarca(string $marca): void
+    public function setMarca(string $marca): ?string
     {
         if (in_array(strtolower($marca), $this->marcasExcluidas)) {
-            echo "La marca del coche no esta aceptada";
+            return "La marca del coche no esta aceptada";
         } else {
             $this->marca = $marca;
+            return 'Se establecio la marca';
         }
     }
 
@@ -138,7 +158,7 @@ class Carro extends BasicModel
     /**
      * @return mixed
      */
-    public function create()
+    public function save() : Carro
     {
         $result = $this->insertRow("INSERT INTO concesionario.carro VALUES (NULL, ?, ?, ?, ?, ?, ?)", array(
                 $this->getMarca(),
@@ -150,7 +170,7 @@ class Carro extends BasicModel
             )
         );
         $this->Disconnect();
-        return $result;
+        return $this;
     }
 
     /**
@@ -158,7 +178,18 @@ class Carro extends BasicModel
      */
     public function update()
     {
-        // TODO: Implement update() method.
+        $result = $this->updateRow("UPDATE concesionario.carro SET marca = ?, color = ?, anno = ?, cajaAutomatica = ?, cantidadGasolina = ?, estado = ? WHERE id = ?", array(
+                $this->getMarca(),
+                $this->getColor(),
+                $this->getAnno(),
+                $this->getCajaAutomatica(),
+                $this->getCantidadGasolina(),
+                $this->getEstado(),
+                $this->getId()
+            )
+        );
+        $this->Disconnect();
+        return $this;
     }
 
     /**
@@ -167,16 +198,39 @@ class Carro extends BasicModel
      */
     public function deleted($id)
     {
-        // TODO: Implement deleted() method.
+        $result = $this->updateRow("UPDATE concesionario.carro SET estado = ? WHERE id = ?", array(
+                'Inactivo',
+                $this->getId()
+            )
+        );
+        $this->Disconnect();
+        return $this;
     }
 
     /**
      * @param $query
      * @return mixed
      */
-    public static function search($query)
+    public static function search($query) // Select * from carro where marca = 'Mclaren'
     {
-        // TODO: Implement search() method.
+        $arrCarros = array();
+        $tmp = new Carro();
+        $getrows = $tmp->getRows($query);
+
+        foreach ($getrows as $valor) {
+            $Carro = new Carro();
+            $Carro->setId($valor['id']);
+            $Carro->setMarca($valor['marca']);
+            $Carro->setColor($valor['color']);
+            $Carro->setAnno($valor['anno']);
+            $Carro->setCajaAutomatica($valor['cajaAutomatica']);
+            $Carro->setCantidadGasolina($valor['cantidadGasolina']);
+            $Carro->setEstado($valor['estado']);
+            $Carro->Disconnect();
+            array_push($arrCarros, $Carro);
+        }
+        $tmp->Disconnect();
+        return $arrCarros;
     }
 
     /**
@@ -184,22 +238,35 @@ class Carro extends BasicModel
      */
     public static function getAll()
     {
-        // TODO: Implement getAll() method.
+        return Carro::search("SELECT * FROM concesionario.carro");
     }
 
     /**
      * @param $id
      * @return mixed
      */
-    public static function searchForId($id)
+    public static function searchForId($id) // 5
     {
-        // TODO: Implement searchForId() method.
+        $Carro = null;
+        if ($id > 0) {
+            $Carro = new Carro();
+            $getrow = $Carro->getRow("SELECT * FROM concesionario.carro WHERE id =?", array($id));
+            $Carro->setId($getrow['id']);
+            $Carro->setMarca($getrow['marca']);
+            $Carro->setColor($getrow['color']);
+            $Carro->setAnno($getrow['anno']);
+            $Carro->setCajaAutomatica($getrow['cajaAutomatica']);
+            $Carro->setCantidadGasolina($getrow['cantidadGasolina']);
+            $Carro->setEstado($getrow['estado']);
+        }
+        $Carro->Disconnect();
+        return $Carro;
     }
 
     //Metodo
     public function saludar(?string $nombre = "Usuario"): string
     { //Visibilidad, function, nombre metodo(parametros), retorno
-        return "Hola " . $nombre . ", Soy " . $this->marca . " de color " . $this->color . " como estas?<br/>";
+        return "Hola " . $nombre . ", Soy " . $this->marca . " de color " . $this->color . " como estas?";
     }
 
     public function tanquear(float $litros): Carro
@@ -217,66 +284,13 @@ class Carro extends BasicModel
 
     public function __toString(): string
     {
-        return "<strong>Marca:</strong> " . $this->getMarca() . "<br/>" .
-            "<strong>Color:</strong> " . $this->getColor() . "<br/>" .
-            "<strong>Año:</strong> " . $this->getAnno() . "<br/>" .
-            "<strong>Caja Automatica:</strong> " . $this->getCajaAutomatica() . "<br/>" .
-            "<strong>Estado:</strong> " . $this->getEstado() . "<br/>" .
-            "<strong>Cantidad de Gasolina:</strong> " . $this->getCantidadGasolina() . "<br/>";
+        $typeOutput = "\n";
+        return "Marca: " . $this->getMarca() . $typeOutput .
+            "Color: " . $this->getColor() . $typeOutput .
+            "Año: " . $this->getAnno() . $typeOutput .
+            "Caja Automatica: " . $this->getCajaAutomatica() . $typeOutput .
+            "Estado: " . $this->getEstado() . $typeOutput .
+            "Cantidad de Gasolina: " . $this->getCantidadGasolina() . $typeOutput;
     }
 
-
 }
-
-require_once ('CarroDeportivo.php');
-
-//$bmw = new Carro('BMW Antiguo',
-//    'Verde',
-//    2000,
-//    "si",
-//    "Disponible"); // Crear el objeto bmw de la clase Carro; A esto se le llama instanciacion.
-//$bmw->create();
-
-
-$mercedes = new Carro(); //Segundo Objeto de la clase Objeto
-$audi = new Carro("Audi", "Naranja", 2017, "ni", "Disponible");
-
-$astonMartin = new CarroDeportivo ("Aston Martin");
-$astonMartin->create();
-
-echo $astonMartin;
-echo $astonMartin->saludar();
-
-//echo $bmw->saludar('Diego');
-//echo $mercedes->saludar('Juan');
-//echo $audi->saludar('Pedro');
-//echo $audi->getMarca()." es de caja automatica: ".$audi->getCajaAutomatica()."<br/>";
-//
-//$audi->tanquear(20) //30 Litros
-//    ->viajar(100) // 28 Litros
-//    ->viajar(200) // 24 Litros
-//    ->tanquear(50)  // 74 Litros
-//    ->viajar(300) // 68 Litros
-//    ->tanquear(20); //88 Litros
-//
-//echo $bmw;
-//
-//echo "Soy ".$audi->getMarca()." y tengo ".$audi->getCantidadGasolina()." Litros de Gasolina<br/>";
-//echo "Soy ".$bmw->getMarca()." y tengo ".$bmw->getCantidadGasolina()." Litros de Gasolina<br/>";
-//
-////Obtener una propiedad
-////echo $bmw->color."<br/>";   //Para obtener la propiedad de un objeto se usa el conecto ->
-////echo $mercedes->color."<br/>";
-//
-////Establecer una propiedad
-//$bmw->setColor("Azul");   //Para establecer una propiedad se le asigna de la misma manera que una variable
-//$bmw->setMarca("BMW");
-////echo "Soy un ".$bmw->marca." ".$bmw->color."<br/>";   //Imprimimos los valores
-//
-//$mercedes->setColor("Negro");
-//$mercedes->setMarca("Mercedes Benz");
-////echo "Soy un ".$mercedes->marca." ".$mercedes->color."<br/>";   //Imprimimos los valores
-
-//Llamar a un metodo
-//echo $bmw->saludar('Diego')."<br/>"; //Llamar a un metodo
-//echo "Saludo: ".$bmw->marca." ".$bmw->saludar('Juan')."<br/>"; //Concatenar salida
