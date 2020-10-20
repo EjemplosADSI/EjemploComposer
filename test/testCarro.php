@@ -6,6 +6,18 @@ require_once ('..\app\Models\CarroDeportivo.php');
 use App\Models\Carro;
 use App\Models\CarroDeportivo;
 
+$marca = $_POST['marca'];
+$color = $_POST['color'];
+$anno = $_POST['anno'];
+$cajaAutomatica = ($_POST['cajaAutomatica'] == 'on') ? "Si" : "No";
+$cantidadGasolina = $_POST['cantidadGasolina'];
+$estado = $_POST['estado'];
+
+$CarroUser = new Carro( $marca, $color, $anno, $cajaAutomatica, $cantidadGasolina, $estado);
+var_dump($CarroUser->save());
+
+//$arrDataCarro = array();
+
 //$bmw = new Carro('BMW Antiguo',
 //    'Verde',
 //    2000,
@@ -13,8 +25,8 @@ use App\Models\CarroDeportivo;
 //    "Disponible"); // Crear el objeto bmw de la clase Carro; A esto se le llama instanciacion.
 //$bmw->create();
 
-$mercedes = new Carro(); //Segundo Objeto de la clase Objeto
-$audi = new Carro("Audi", "Naranja", 2017, "ni", "Disponible");
+//$mercedes = new Carro(); //Segundo Objeto de la clase Objeto
+//$audi = new Carro("Audi", "Naranja", 2017, "ni", "Disponible");
 
 //$Mclaren = new Carro();
 //$Mclaren->setId(10);
@@ -26,14 +38,14 @@ $audi = new Carro("Audi", "Naranja", 2017, "ni", "Disponible");
 //
 //$Mclaren->deleted(10); //Eliminacion Segura
 
-$arrCarros = Carro::search("SELECT * FROM concesionario.carro WHERE color = 'Verde'");
+//$arrCarros = Carro::search("SELECT * FROM concesionario.carro WHERE color = 'Verde'");
 //var_dump($arrCarros);
 
-$Mclaren = Carro::searchForId(10);
-echo $Mclaren;
+//$Mclaren = Carro::searchForId(10);
+//echo $Mclaren;
 
-$allCars = Carro::getAll();
-var_dump($allCars);
+//$allCars = Carro::getAll();
+//var_dump($allCars);
 
 //echo $Mclaren;
 //echo $Mclaren->saludar();

@@ -20,14 +20,14 @@ class Carro extends BasicModel
     private array $marcasExcluidas = array('lexus', 'opel', 'porche');
 
     //Metodo Constructor
-    public function __construct($marca = "Generica", $color = "Rojo", $anno = 0, $cajaAutomatica = "No", $estado = "Disponible")
+    public function __construct($marca = "Generica", $color = "Rojo", $anno = 0, $cajaAutomatica = "No", $cantidadGasolina = 10, $estado = "Disponible")
     {
         parent::__construct();
         $this->setMarca($marca); //Propiedad recibida y asigna a una propiedad de la clase
         $this->setColor($color);
         $this->setAnno($anno);
         $this->setCajaAutomatica($cajaAutomatica);
-        $this->setCantidadGasolina(10); //Por defecto de fabrica salen con 10 litros de gasolina
+        $this->setCantidadGasolina($cantidadGasolina); //Por defecto de fabrica salen con 10 litros de gasolina
         $this->setEstado($estado);
     }
 
@@ -284,7 +284,7 @@ class Carro extends BasicModel
 
     public function __toString(): string
     {
-        $typeOutput = "\n";
+        $typeOutput = "<br/>";
         return "Marca: " . $this->getMarca() . $typeOutput .
             "Color: " . $this->getColor() . $typeOutput .
             "Año: " . $this->getAnno() . $typeOutput .
