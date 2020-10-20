@@ -22,12 +22,12 @@ require("../../partials/routes.php");
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Blank Page</h1>
+                        <h1>Gestionar Carros</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Blank Page</li>
+                            <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+                            <li class="breadcrumb-item active">Gestionar Carros</li>
                         </ol>
                     </div>
                 </div>
@@ -37,10 +37,24 @@ require("../../partials/routes.php");
         <!-- Main content -->
         <section class="content">
 
+            <?php if (!empty($_GET['respuesta']) && !empty($_GET['action'])) { ?>
+                <?php if ($_GET['respuesta'] == "correcto") { ?>
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h5><i class="icon fas fa-check"></i> Correcto!</h5>
+                        <?php if ($_GET['action'] == "create") { ?>
+                            El carro ha sido registrado con exito!
+                        <?php } else if ($_GET['action'] == "update") { ?>
+                            Los datos del carro han sido actualizados correctamente!
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+            <?php } ?>
+
             <!-- Default box -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Title</h3>
+                    <h3 class="card-title">Listado de Carros</h3>
 
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">

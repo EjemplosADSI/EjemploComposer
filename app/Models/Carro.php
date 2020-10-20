@@ -20,15 +20,15 @@ class Carro extends BasicModel
     private array $marcasExcluidas = array('lexus', 'opel', 'porche');
 
     //Metodo Constructor
-    public function __construct($marca = "Generica", $color = "Rojo", $anno = 0, $cajaAutomatica = "No", $cantidadGasolina = 10, $estado = "Disponible")
+    public function __construct($arrCarro = array())
     {
         parent::__construct();
-        $this->setMarca($marca); //Propiedad recibida y asigna a una propiedad de la clase
-        $this->setColor($color);
-        $this->setAnno($anno);
-        $this->setCajaAutomatica($cajaAutomatica);
-        $this->setCantidadGasolina($cantidadGasolina); //Por defecto de fabrica salen con 10 litros de gasolina
-        $this->setEstado($estado);
+        $this->setMarca($arrCarro['marca'] ?? "Generica"); //Propiedad recibida y asigna a una propiedad de la clase
+        $this->setColor($arrCarro['color'] ?? "Rojo");
+        $this->setAnno($arrCarro['anno'] ?? 0);
+        $this->setCajaAutomatica($arrCarro['cajaAutomatica'] ?? "No");
+        $this->setCantidadGasolina($arrCarro['cantidadGasolina'] ?? 10); //Por defecto de fabrica salen con 10 litros de gasolina
+        $this->setEstado($arrCarro['estado'] ?? "Disponible");
     }
 
     public function __destruct() // Cierro Conexiones
@@ -280,6 +280,16 @@ class Carro extends BasicModel
         $consumo = $kilometros / 50;
         $this->cantidadGasolina -= $consumo;
         return $this;
+    }
+
+    static function carroRegistrado(string $marca, int $anno){
+        $marca = strtolower(trim($marca));
+        $result = Carro::search("SELECT * FROM concesionario.carro where marca = '" . $marca. "' and anno = ".$anno);
+        if ( count ($result) > 0 ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function __toString(): string

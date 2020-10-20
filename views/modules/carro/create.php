@@ -66,100 +66,58 @@ require("../../partials/routes.php");;
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <!-- form start -->
-                                <form class="form-horizontal" method="post" id="frmCreateUsuario"
-                                      name="frmCreateUsuario"
-                                      action="../../../app/Controllers/UsuariosController.php?action=create">
+                                <form class="form-horizontal" method="post" id="frmCreateCarro"
+                                      name="frmCreateCarro"
+                                      action="../../../app/Controllers/CarroController.php?action=create">
                                     <div class="form-group row">
-                                        <label for="nombres" class="col-sm-2 col-form-label">Nombres</label>
+                                        <label for="marca" class="col-sm-2 col-form-label">Marca</label>
                                         <div class="col-sm-10">
-                                            <input required type="text" class="form-control" id="nombres" name="nombres"
-                                                   placeholder="Ingrese sus nombres">
+                                            <input required type="text" class="form-control" id="marca" name="marca"
+                                                   placeholder="Ingrese la marca del carro">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="apellidos" class="col-sm-2 col-form-label">Apellidos</label>
+                                        <label for="color" class="col-sm-2 col-form-label">Color</label>
                                         <div class="col-sm-10">
-                                            <input required type="text" class="form-control" id="apellidos"
-                                                   name="apellidos" placeholder="Ingrese sus apellidos">
+                                            <input required type="color" class="form-control" id="color"
+                                                   name="color" placeholder="Seleccione el Color">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="tipo_documento" class="col-sm-2 col-form-label">Tipo
-                                            Documento</label>
+                                        <label for="anno" class="col-sm-2 col-form-label">Año</label>
                                         <div class="col-sm-10">
-                                            <select id="tipo_documento" name="tipo_documento" class="custom-select">
-                                                <option value="C.C">Cedula de Ciudadania</option>
-                                                <option value="T.I">Tarjeta de Identidad</option>
-                                                <option value="R.C">Registro Civil</option>
-                                                <option value="Pasaporte">Pasaporte</option>
-                                                <option value="C.E">Cedula de Extranjeria</option>
+                                            <input required type="number" min="1900" max="<?= date('Y') ?>" minlength="4" class="form-control"
+                                                   id="anno" name="anno" placeholder="Ingrese el Año">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+
+                                        <div class=" custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                            <input type="checkbox" class="custom-control-input" id="cajaAutomatica" name="cajaAutomatica">
+                                            <label class="custom-control-label" for="customSwitch3">Tiene Caja Automatica?</label>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="cantidadGasolina" class="col-sm-2 col-form-label">Cantidad Gasolina</label>
+                                        <div class="col-sm-10">
+                                            <input required type="number" min="0" minlength="3" class="form-control"
+                                                   id="cantidadGasolina" name="cantidadGasolina" placeholder="Ingrese la cantidad de litros">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="estado" class="col-sm-2 col-form-label">Estado</label>
+                                        <div class="col-sm-10">
+                                            <select id="estado" name="estado" class="custom-select">
+                                                <option>Seleccione</option>
+                                                <option value="Disponible">Disponible</option>
+                                                <option value="Vendido">Vendido</option>
+                                                <option value="Apartado">Apartado</option>
+                                                <option value="En Reparacion">En Reparacion</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label for="documento" class="col-sm-2 col-form-label">Documento</label>
-                                        <div class="col-sm-10">
-                                            <input required type="number" minlength="6" class="form-control"
-                                                   id="documento" name="documento" placeholder="Ingrese su documento">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="telefono" class="col-sm-2 col-form-label">Telefono</label>
-                                        <div class="col-sm-10">
-                                            <input required type="number" minlength="6" class="form-control"
-                                                   id="telefono" name="telefono" placeholder="Ingrese su telefono">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="direccion" class="col-sm-2 col-form-label">Direccion</label>
-                                        <div class="col-sm-10">
-                                            <input required type="text" class="form-control" id="direccion"
-                                                   name="direccion" placeholder="Ingrese su direccion">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="fecha_nacimiento" class="col-sm-2 col-form-label">Fecha Nacimiento</label>
-                                        <div class="col-sm-10">
-                                            <input required type="date" max="<?= Carbon::now()->subYear(12)->format('Y-m-d') ?>" class="form-control" id="fecha_nacimiento"
-                                                   name="fecha_nacimiento" placeholder="Ingrese su Fecha de Nacimiento">
-                                        </div>
-                                    </div>
-                                    <?php if ((!empty($_SESSION['UserInSession']['rol'])) && $_SESSION['UserInSession']['rol'] == 'Administrador'){ ?>
-                                        <div class="form-group row">
-                                            <label for="user" class="col-sm-2 col-form-label">Usuario</label>
-                                            <div class="col-sm-10">
-                                                <input required type="text" class="form-control" id="user" name="user" placeholder="Ingrese su Usuario">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label for="password" class="col-sm-2 col-form-label">Password</label>
-                                            <div class="col-sm-10">
-                                                <input required type="password" class="form-control" id="password" name="password" placeholder="Ingrese su Usuario">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label for="rol" class="col-sm-2 col-form-label">Rol</label>
-                                            <div class="col-sm-10">
-                                                <select id="rol" name="rol" class="custom-select">
-                                                    <option value="Administrador">Administrador</option>
-                                                    <option value="Empleado">Empleado</option>
-                                                    <option value="Cliente">Cliente</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label for="estado" class="col-sm-2 col-form-label">Estado</label>
-                                            <div class="col-sm-10">
-                                                <select id="rol" name="Estado" class="custom-select">
-                                                    <option value="Activo">Activo</option>
-                                                    <option value="Inactivo">Inactivo</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    <?php } ?>
 
                                     <hr>
                                     <button type="submit" class="btn btn-info">Enviar</button>
@@ -168,7 +126,6 @@ require("../../partials/routes.php");;
                                 </form>
                             </div>
                             <!-- /.card-body -->
-
                         </div>
                         <!-- /.card -->
                     </div>
