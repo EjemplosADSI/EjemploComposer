@@ -91,12 +91,10 @@ require("../../partials/routes.php");;
                                         </div>
                                     </div>
                                     <div class="form-group row">
-
-                                        <div class=" custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                            <input type="checkbox" class="custom-control-input" id="cajaAutomatica" name="cajaAutomatica">
-                                            <label class="custom-control-label" for="customSwitch3">Tiene Caja Automatica?</label>
+                                        <label for="cajaAutomatica" class="col-sm-2 col-form-label">Caja Automatica?</label>
+                                        <div class="col-sm-10">
+                                            <input type="checkbox" id="cajaAutomatica" name="cajaAutomatica" data-bootstrap-switch data-off-text="No" data-on-text="Si" data-off-color="warning" data-on-color="success">
                                         </div>
-
                                     </div>
                                     <div class="form-group row">
                                         <label for="cantidadGasolina" class="col-sm-2 col-form-label">Cantidad Gasolina</label>

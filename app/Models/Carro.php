@@ -23,6 +23,7 @@ class Carro extends BasicModel
     public function __construct($arrCarro = array())
     {
         parent::__construct();
+        $this->setId($arrCarro['id'] ?? 0);
         $this->setMarca($arrCarro['marca'] ?? "Generica"); //Propiedad recibida y asigna a una propiedad de la clase
         $this->setColor($arrCarro['color'] ?? "Rojo");
         $this->setAnno($arrCarro['anno'] ?? 0);
